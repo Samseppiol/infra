@@ -63,7 +63,7 @@ Resources:
         Ref: VPC
       InternetGatewayId:
         Ref: InternetGateway
-  RouteTable:
+  PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId:
@@ -75,12 +75,12 @@ Resources:
           -
             - !Ref VpcName
             - !Ref Environment
-            - "RouteTable"
+            - "PublicRouteTable"
   PublicRoute:
     Type: AWS::EC2::Route
     DependsOn: InternetGateway
     Properties:
-      RouteTableId: !Ref RouteTable
+      RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
   PublicSubnetA:

@@ -7,7 +7,7 @@ Parameters:
   VpcName:
     Type: String 
     AllowedPattern: '[A-Za-z]+'
-  InternetGatewayName:
+  Environment: 
     Type: String 
     AllowedPattern: '[A-Za-z]+'
 Resources:
@@ -20,13 +20,22 @@ Resources:
       InstanceTenancy: default
       Tags:
       - Key: Name
-        Value: !Ref VpcName
+        Value: !Join
+          - '-' 
+          -
+            - !Ref VpcName
+            - !Ref Environment
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
       - Key: Name
-        Value: !Ref InternetGatewayName
+        Value: !Join
+          - '-' 
+          -
+            - !Ref VpcName
+            - !Ref Environment
+            - "InternetGateway"
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
@@ -34,3 +43,23 @@ Resources:
         Ref: VPC
       InternetGatewayId:
         Ref: InternetGateway
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPC
+      Tags:
+      - Key: Name
+        Value: !Join
+          - '-' 
+          -
+            - !Ref VpcName
+            - !Ref Environment
+            - "RouteTable"
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGateway
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway

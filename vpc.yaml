@@ -131,3 +131,19 @@ Resources:
             - !FindInMap [ SubnetForRegion, !Ref "AWS::Region", "AvailabilityZoneThree" ]
             - !Ref Environment
             - "Public"
+  AssociateSubnetOne:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      SubnetId: !Ref PublicSubnetA
+      RouteTableId: !Ref PublicRouteTable
+  AssociateSubnetTwo:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      SubnetId: !Ref PublicSubnetB
+      RouteTableId: !Ref PublicRouteTable
+  AssociateSubnetThree:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      SubnetId: !Ref PublicSubnetC
+      RouteTableId: !Ref PublicRouteTable
+

@@ -156,6 +156,12 @@ Resources:
     Type: AWS::EC2::EIP
     Properties:
       Domain: vpc
+Outputs:
+  StackVPC:
+    Description: The ID of the VPC
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VPCID"
 
   
 

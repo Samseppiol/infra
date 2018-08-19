@@ -1,0 +1,108 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  StackTag:
+    Type: String 
+    Description: A unique value to associate with all resources within the stack, generally use an environment value but this is just for practice.
+  ImportStackName:
+    Type: String 
+    Description: Stackname to import vpc id from
+  IpForAccess:
+    Type: String 
+    AllowedPattern: '((\d{1,3})\.){3}\d{1,3}/\d{1,2}'
+  InstanceType: 
+    Type: String 
+    Description: Always going to be using a t2 micro so making it default, better to have a param than hard code in the template
+    Default: t2.micro
+  KeyPairName:
+    Type: String 
+Mappings:
+  Region:
+    # Using tokyo to provision all these stacks, so only adding mappings for Tokyo region
+    ap-northeast-1:
+      AvailabilityZone: "ap-northeast-1a"
+      AMI: ami-06cd52961ce9f0d85
+Resources: 
+  CloudWatchRole:
+    Type: AWS::IAM::Role 
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Allow"
+            Principal: 
+              Service: 
+                - "ec2.amazonaws.com"
+            Action: 
+              - "sts:AssumeRole"
+  CloudWatchPolicy:              
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: !Join
+        - '-' 
+        -
+          - "CloudWatchPolicy" 
+          - !Ref StackTag
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Allow"
+            Action:
+              - "cloudwatch:*"
+              - "logs:*"
+              - "sns:*"
+            Resource: "*"
+      Roles: 
+        - 
+          Ref: "CloudWatchRole"
+  InstanceProfile: 
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      Roles: 
+        - !Ref CloudWatchRole
+  SecurityGroup: 
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      VpcId: 
+        Fn::ImportValue:
+          !Sub "${ImportStackName}-VPCID"
+      GroupDescription: Allow SSH to instance
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: !Ref IpForAccess
+  Instance: 
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: 
+        Fn::FindInMap: 
+          - "Region"
+          - Ref: "AWS::Region"
+          - "AMI"
+      KeyName: !Ref KeyPairName
+      AvailabilityZone:
+        Fn::FindInMap: 
+          - "Region"
+          - Ref: "AWS::Region"
+          - "AvailabilityZone"
+      SubnetId: 
+        Fn::ImportValue:
+          !Sub "${ImportStackName}-PublicSubnet"
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !Ref InstanceProfile
+      SecurityGroupIds: 
+        - !Ref SecurityGroup
+      Tags:
+        - Key: Name
+          Value: !Join
+            - '-' 
+            -
+              - "MemoryMetricsEC2"
+              - !Ref StackTag
+
+  
+
+
+

@@ -1,1 +1,1 @@
-> Having already passed both the AWS Developer Associate and Solutions Architect Associate, I am now moving on to the SysOps Administrator Associate. This time, I'm going to write everything in cloudformation rather than just click ops and use this repo to store my notes.
+> Having already passed both the AWS Developer Associate and Solutions Architect Associate, I am now moving on to the SysOps Administrator Associate. This time, I'm going to write everything in cloudformation rather than just click ops and use this repo to store my notes from the a cloud guru course.

@@ -15,3 +15,4 @@ yum install jenkins -y
 # Start jenkins and ensure it starts on boot
 service jenkins start
 chkconfig jenkins on
+yum install git -y

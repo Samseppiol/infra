@@ -119,4 +119,15 @@ CloudFormation do
         Value Ref('VPC')
         Export(:VPCID)
     end 
+    
+    Output(:PublicSubnet) do 
+        Value Ref(:PublicSubnet)
+        Export(:PublicSubnetId)
+    end
+
+    Output(:PrivateSubnet) do 
+        Value Ref(:PrivateSubnet)
+        Export(:PrivateSubnetId)
+    end 
+     
 end 

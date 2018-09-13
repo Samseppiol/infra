@@ -68,9 +68,55 @@ CloudFormation do
         GatewayId Ref('InternetGateway')
     end
 
-    EC2_Subnet('PublicSubnet') do 
+    EC2_Subnet(:PublicSubnet) do 
         VpcId Ref('VPC')
         CidrBlock Ref('PublicSubnetCidr')
         AvailabilityZone FnFindInMap('SubnetForRegion', Ref('AWS::Region'), :AvailabilityZoneOne)
     end
+
+    EC2_SubnetRouteTableAssociation(:AssociatePublicSubnet) do 
+        SubnetId Ref('PublicSubnet')
+        RouteTableId Ref('PublicRouteTable')
+    end 
+
+    EC2_Subnet(:PrivateSubnet) do 
+        VpcId Ref('VPC')
+        CidrBlock Ref('PrivateSubnetCidr')
+        AvailabilityZone FnFindInMap('SubnetForRegion', Ref('AWS::Region'), :AvailabilityZoneTwo )
+        MapPublicIpOnLaunch 'false' 
+    end
+
+    EC2_RouteTable(:PrivateRouteTable) do
+        VpcId Ref('VPC')
+        Tags [{
+            "Key" => "Name",
+            "Value" => "PrivateRouteTable"
+        }]
+    end
+
+    EC2_Route(:PrivateRoute) do 
+        DependsOn :NatGateway 
+        RouteTableId Ref('PrivateRouteTable')
+        DestinationCidrBlock '0.0.0.0/0'
+        NatGatewayId Ref('NatGateway')
+    end 
+
+    EC2_SubnetRouteTableAssociation(:AssociatePrivateSubnet) do 
+        SubnetId Ref('PrivateSubnet')
+        RouteTableId Ref('PrivateRouteTable')
+    end 
+
+    EC2_NatGateway(:NatGateway) do 
+        AllocationId FnGetAtt('EIP', 'AllocationId')
+        SubnetId Ref('PublicSubnet')
+    end 
+
+    EC2_EIP(:EIP) do 
+        Domain 'vpc' 
+    end
+
+    Output(:StackVPC) do
+        Value Ref('VPC')
+        Export(:VPCID)
+    end 
 end 

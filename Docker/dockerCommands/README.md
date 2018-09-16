@@ -28,3 +28,10 @@
 
 #### Docker Kill 
 * docker kill "CONTAINER_ID" (sends a SIGKILL message to the running process in the container, informing it to stop immediately)
+
+#### Docker Exec 
+* Docker run redis 
+* Docker exec -it "CONTAINER_ID" redis-cli (Used to run a command within an existing, running container, the key is the 'it' flag, without it, it won't work)
+
+#### -it 
+* The -it command is actually two separate commands that can also be written as -i -t. The I stands for STDIN, standard input - whatever I type in, and the -t stands for standard out, basically return from STDOUT.

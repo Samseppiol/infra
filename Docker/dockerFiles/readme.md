@@ -17,3 +17,9 @@ Likely steps to take would be:
 * run chrome installer
 ##### Command to run on startup
 * Run chrome.exe
+
+
+## tagging a docker container.
+* Not ideal to constantly be running commands such as docker run fueqygfuyegbu734
+* docker build -t jackhage/dockertests:latest 
+* Convention is YOURDOCKERID/PROJECTNAME:VERSION

@@ -9,3 +9,8 @@
 ##### node-app 
  * Make it using the current Dockerfile in the current directory
  * Map port 8081 to 8081 
+
+
+ ### Commands 
+ * docker run myimage > docker-compose up
+ * docker build . && docker run myimage > docker-compose up --build

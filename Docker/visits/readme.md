@@ -14,3 +14,5 @@
  ### Commands 
  * docker run myimage > docker-compose up
  * docker build . && docker run myimage > docker-compose up --build
+ * docker-compose up -d > Runs docker compose in the background 
+ * docker-compose down > Stops any running containers in the background

@@ -16,3 +16,4 @@
  * docker build . && docker run myimage > docker-compose up --build
  * docker-compose up -d > Runs docker compose in the background 
  * docker-compose down > Stops any running containers in the background
+ * docker-compose ps > Lists all containers running with docker-compose. Must be run in the directory containing the docker-compose.yml
